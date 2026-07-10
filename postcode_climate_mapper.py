@@ -1,15 +1,14 @@
-import pandas as pd
-import geopandas as gpd
+import pandas
+import geopandas
 import rasterio
-import xarray as xr
+import xarray
 import numpy as np
-from shapely.geometry import Point
 from rasterio.transform import Affine
 from rasterio.sample import sample_gen
 
-poa = gpd.read_file('POA/POA.shp')
+poa = geopandas.read_file('POA/POA.shp')
 
-climate_ds = xr.open_dataset('koppen_major_AGCDv2_1991-2020.nc')
+climate_ds = xarray.open_dataset('koppen_major_AGCDv2_1991-2020.nc')
 
 climate_var = climate_ds['stern_dehoedt_2000_major']
 
@@ -22,7 +21,6 @@ lon_res = float(lons[1] - lons[0])
 lat_res = float(lats[1] - lats[0])
 transform = Affine(lon_res, 0, lons[0], 0, -lat_res, lats[-1])
 
-# Write to GeoTIFF
 with rasterio.open(
     'climate_classification.tif',
     'w',
@@ -68,10 +66,9 @@ with rasterio.open('climate_classification.tif') as src:
                 postcode_to_climate.append({
                     'postcode': postcode,
                     'climate_code': climate_code,
-                    'suburb': row.get('poa_name_2', ''),
                 })
 
-    postcode_climate_df = pd.DataFrame(postcode_to_climate)
+    postcode_climate_df = pandas.DataFrame(postcode_to_climate)
     
 climate_code_map = {
     0: 'equatorial',
