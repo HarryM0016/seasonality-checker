@@ -84,7 +84,13 @@ def normalise_ingredients(ingredients: list[str]) -> list[str]:
     
     tool_use = response.content[0]
     result = tool_use.input
-    return result.get("matched_ingredients", [])
+    matched_ingredients = result.get("matched_ingredients", [])
+    produce = []
+    
+    for ingredient in matched_ingredients:
+        produce.append([ingredient, False])
+        
+    return produce
     
 if __name__ == "__main__":
     # url = "https://www.recipetineats.com/apple-pie-recipe/"
