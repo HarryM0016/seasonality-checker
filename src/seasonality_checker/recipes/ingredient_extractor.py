@@ -2,13 +2,16 @@ from urllib.request import urlopen
 from dotenv import load_dotenv
 from anthropic import Anthropic
 import recipe_scrapers
+import requests
 import json
 import os
 
 load_dotenv()
 
 def extract_ingredients_from_recipe(url: str) -> list[str]:
-    html = urlopen(url).read().decode("utf-8")
+    response = requests.get(url)
+    response.raise_for_status()
+    html = response.text
     
     try:
         scraper = recipe_scrapers.scrape_html(html, org_url=url)
@@ -85,17 +88,5 @@ def normalise_ingredients(ingredients: list[str]) -> list[str]:
     tool_use = response.content[0]
     result = tool_use.input
     matched_ingredients = result.get("matched_ingredients", [])
-    produce = []
-    
-    for ingredient in matched_ingredients:
-        produce.append([ingredient, False])
         
-    return produce
-    
-if __name__ == "__main__":
-    # url = "https://www.recipetineats.com/apple-pie-recipe/"
-    # url = "https://www.andy-cooks.com/blogs/recipes/pico-de-gallo?_pos=1&_sid=7f33eaca6&_ss=r"
-    url = "https://cooking.nytimes.com/recipes/6216-strawberry-rhubarb-pie"
-    ingredients = extract_ingredients_from_recipe(url)
-    parsed_data = normalise_ingredients(ingredients)
-    print(parsed_data)
+    return matched_ingredients
