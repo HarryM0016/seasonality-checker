@@ -1,7 +1,7 @@
 import psycopg2
 import pandas
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
 load_dotenv()
 connection_string = os.getenv('DATABASE_URL')
@@ -13,7 +13,8 @@ dataframe = pandas.read_csv('postcode_climate_mapping.csv')
 
 for _, row in dataframe.iterrows():
     try:
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT INTO postcodes (postcode, climate_id)
             SELECT %s, id FROM climates WHERE name = %s
             ON CONFLICT DO NOTHING
