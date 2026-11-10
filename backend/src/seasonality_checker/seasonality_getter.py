@@ -2,7 +2,7 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 
-from src.seasonality_checker.domain.ingredient import Ingredient
+from seasonality_checker.domain.ingredient import Ingredient
 
 
 def get_seasonality(matched_ingredients: list[str], climate_id: int) -> list[Ingredient]:

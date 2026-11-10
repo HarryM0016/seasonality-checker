@@ -1,5 +1,0 @@
-.env
-.env.local
-.env.*.local
-postcode_climate_mapping.csv
-.DS_Store

@@ -1,8 +1,8 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from src.seasonality_checker.climate.climate_raster import create_climate_raster
-from src.seasonality_checker.climate.postcode_climate_mapper import (
+from seasonality_checker.climate.climate_raster import create_climate_raster
+from seasonality_checker.climate.postcode_climate_mapper import (
     map_postcodes_to_climate,
 )
 

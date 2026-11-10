@@ -1,4 +1,4 @@
-from src.seasonality_checker.domain.ingredient import Ingredient
+from seasonality_checker.domain.ingredient import Ingredient
 
 def score_recipe(ingredients: list[Ingredient]):
     score = [0] * 12

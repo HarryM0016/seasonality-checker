@@ -1,0 +1,17 @@
+pyproject.toml
+src/seasonality_checker/__init__.py
+src/seasonality_checker/recipe_scorer.py
+src/seasonality_checker/seasonality_getter.py
+src/seasonality_checker.egg-info/PKG-INFO
+src/seasonality_checker.egg-info/SOURCES.txt
+src/seasonality_checker.egg-info/dependency_links.txt
+src/seasonality_checker.egg-info/requires.txt
+src/seasonality_checker.egg-info/top_level.txt
+src/seasonality_checker/climate/__init__.py
+src/seasonality_checker/climate/climate_raster.py
+src/seasonality_checker/climate/postcode_climate_mapper.py
+src/seasonality_checker/domain/__init__.py
+src/seasonality_checker/domain/ingredient.py
+src/seasonality_checker/recipes/__init__.py
+src/seasonality_checker/recipes/ingredient_extractor.py
+src/seasonality_checker/recipes/ingredient_normalizer.py

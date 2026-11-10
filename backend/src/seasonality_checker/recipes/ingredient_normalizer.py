@@ -41,7 +41,6 @@ def normalise_ingredients(ingredients: list[str]) -> list[str]:
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=1000,
-        temperature=0.0,
         system=system_prompt,
         messages=[
             {"role": "user", "content": f"Raw Recipe Ingredients: {json.dumps(ingredients)}"}

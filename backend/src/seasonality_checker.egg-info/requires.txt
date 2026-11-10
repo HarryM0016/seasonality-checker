@@ -1,0 +1,11 @@
+anthropic
+python-dotenv
+psycopg2-binary
+recipe-scrapers
+requests
+numpy
+pandas
+geopandas
+rasterio
+xarray
+netCDF4
