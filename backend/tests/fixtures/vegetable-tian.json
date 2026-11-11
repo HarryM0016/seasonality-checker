@@ -1,0 +1,15 @@
+{
+    "url": "https://www.recipetineats.com/vegetable-tian-recipe/#recipe",
+    "lines": [
+        {"line": "6 tbsp extra virgin olive oil", "expected": []},
+        {"line": "4 garlic cloves (, finely minced with a knife)", "expected": ["garlic"]},
+        {"line": "2 tbsp tomato paste", "expected": []},
+        {"line": "1 eggplant (aubergine), cut in half lengthways then sliced 8mm / 0.3\u201d half moons (~380g / 13.5oz)", "expected": ["eggplant"]},
+        {"line": "3 zucchini (courgette), sliced into 6mm / 0.25\u201d rounds (~180g / 6oz each)", "expected": ["zucchini"]},
+        {"line": "3 red onion (, sliced into 3mm / 0.1\u201d rounds (~140g / 5oz each) (use a mandolin if you have one))", "expected": ["onion"]},
+        {"line": "5 tomato (, sliced into 5mm / 0.2\u201d rounds (~140g / 5oz each))", "expected": ["tomato"]},
+        {"line": "2 tsp cooking / kosher salt (, (or half for table salt, +50% for flakes))", "expected": []},
+        {"line": "1/2 tsp black pepper", "expected": []},
+        {"line": "1 1/2 tsp herbes de Provence", "expected": []}
+    ]
+}

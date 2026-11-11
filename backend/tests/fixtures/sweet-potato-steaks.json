@@ -1,0 +1,43 @@
+{
+  "url": "https://www.recipetineats.com/sweet-potato-steaks/#recipe",
+  "lines": [
+    {
+      "line": "1 gigantic sweet potato - to cut 2 x \u201csteaks\u201d (1.8 cm thick, 17 cm long, 7 cm wide (0.7 x 6.5 x 2.75\") - Note 1)",
+      "expected": ["sweet potato"]
+    },
+    { "line": "2 - 3 tsp olive oil", "expected": [] },
+    { "line": "1 1/2 tsp smoked paprika (sub ordinary)", "expected": [] },
+    { "line": "1/2 tsp onion powder (or more garlic powder)", "expected": [] },
+    { "line": "1/2 tsp garlic powder (or more onion powder)", "expected": [] },
+    { "line": "1/4 tsp cumin powder", "expected": [] },
+    { "line": "1/2 tsp cooking/kosher salt", "expected": [] },
+    { "line": "1/4 tsp black pepper", "expected": [] },
+    { "line": "1 cup plain yogurt (250g)", "expected": [] },
+    { "line": "2 1/2 tbsp tahini (Note 2)", "expected": [] },
+    { "line": "1 1/2 tbsp lemon juice", "expected": ["lemon"] },
+    { "line": "1 garlic clove (, finely grated)", "expected": ["garlic"] },
+    { "line": "1/2 tsp cooking/kosher salt", "expected": [] },
+    { "line": "2 tbsp extra virgin olive oil", "expected": [] },
+    { "line": "3 garlic cloves (, finely minced)", "expected": ["garlic"] },
+    {
+      "line": "1 1/2 tbsp eschallot (US: shallot), finely chopped (Note 3)",
+      "expected": ["shallot"]
+    },
+    {
+      "line": "1 tbsp red cayenne pepper (, deseeded, finely chopped (not spicy, Note 4))",
+      "expected": ["chilli"]
+    },
+    {
+      "line": "1 tbsp green cayenne pepper (, deseeded, finely chopped (not spicy, Note 4))",
+      "expected": ["chilli"]
+    },
+    { "line": "1 tbsp white sesame seeds", "expected": [] },
+    { "line": "2 tbsp pine nuts (, toasted)", "expected": [] },
+    {
+      "line": "2 tbsp coriander/cilantro leaves (, finely chopped)",
+      "expected": ["coriander"]
+    },
+    { "line": "Pinch of sumac (, optional (or paprika))", "expected": [] },
+    { "line": "Pita or lebanese bread (, toasted (Note 5))", "expected": [] }
+  ]
+}

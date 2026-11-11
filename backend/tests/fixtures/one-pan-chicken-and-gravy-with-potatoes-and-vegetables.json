@@ -1,0 +1,62 @@
+{
+  "url": "https://www.recipetineats.com/one-pan-chicken-and-gravy-with-potatoes-and-vegetables/",
+  "lines": [
+    {
+      "line": "1 - 1.25kg (2 - 2.5lb) large bone-in skin-on thighs (4 - 5 pieces) (, ~220-250g / 7 - 8 oz each (Note 1))",
+      "expected": []
+    },
+    { "line": "1 tbsp olive oil", "expected": [] },
+    { "line": "1 1/2 tsp paprika (, regular/sweet)", "expected": [] },
+    { "line": "1/2 tsp garlic powder", "expected": [] },
+    {
+      "line": "1/2 tsp onion powder (, or more garlic powder)",
+      "expected": []
+    },
+    { "line": "1 tsp dried thyme (, crushed with fingers)", "expected": [] },
+    {
+      "line": "1 tsp cooking salt / kosher salt (halve for table salt, double for flakes)",
+      "expected": []
+    },
+    { "line": "1/4 tsp black pepper", "expected": [] },
+    {
+      "line": "600g/ 20oz baby potatoes (, skin on, cut into 1.75 cm / 0.7\" pieces (Note 2))",
+      "expected": ["potato"]
+    },
+    {
+      "line": "3 carrots (, peeled, cut into 7mm / 1/3\" thick coins (consider halving very big rounds into half moons))",
+      "expected": ["carrot"]
+    },
+    {
+      "line": "1 large red onion (, cut into 1cm / 0.4\" thick wedges)",
+      "expected": ["onion"]
+    },
+    {
+      "line": "2 garlic cloves (, crushed with garlic crusher or finely minced with a knife)",
+      "expected": ["garlic"]
+    },
+    { "line": "1 1/2 tbsp olive oil", "expected": [] },
+    {
+      "line": "1 tsp cooking salt / kosher salt (halve for table salt, double for flakes)",
+      "expected": []
+    },
+    { "line": "1/4 tsp black pepper", "expected": [] },
+    { "line": "1/3 cup plain flour / all-purpose flour", "expected": [] },
+    {
+      "line": "2 1/2 cups beef stock/broth (, low sodium (yes, beef, not chicken! Note 3))",
+      "expected": []
+    },
+    {
+      "line": "1 tsp dark soy *secret ingredient* (, optional, to make gravy rich brown plus deepens flavour, or use gravy browner (Note 4))",
+      "expected": []
+    },
+    { "line": "1/2 tsp black pepper", "expected": [] },
+    {
+      "line": "1 cup frozen peas (, leave out to thaw while chicken is baking)",
+      "expected": []
+    },
+    {
+      "line": "1 tsp thyme leaves (, for sprinkling (100% optional))",
+      "expected": []
+    }
+  ]
+}

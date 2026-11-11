@@ -1,0 +1,36 @@
+{
+  "url": "https://www.recipetineats.com/quick-chinese-bbq-pork-mince-bowls/",
+  "lines": [
+    { "line": "1 tbsp oil", "expected": [] },
+    { "line": "1/2 onion (, chopped)", "expected": ["onion"] },
+    { "line": "2 garlic cloves (, finely minced)", "expected": ["garlic"] },
+    {
+      "line": "500g/ 1 lb pork mince / ground pork (or chicken or turkey)",
+      "expected": []
+    },
+    {
+      "line": "1 tbsp (tightly packed) brown sugar (or 1 1/2 tbsp honey)",
+      "expected": []
+    },
+    {
+      "line": "3 tbsp hoisin sauce (avoid orange hoisin eg. Ayam, Note 1)",
+      "expected": []
+    },
+    { "line": "1 tbsp dark soy sauce (Note 2)", "expected": [] },
+    { "line": "3/4 tsp Chinese five spice powder", "expected": [] },
+    { "line": "Pinch white pepper (, or black pepper)", "expected": [] },
+    {
+      "line": "1/8 tsp red food colouring (, optional (for touch of Chinese BBQ Pork colour!))",
+      "expected": []
+    },
+    { "line": "White rice", "expected": [] },
+    {
+      "line": "Green onion (, finely sliced, and/or white sesame seeds)",
+      "expected": ["spring onion"]
+    },
+    {
+      "line": "Fresh veggies for the side - cucumber slices (, tomato, grated carrot, steamed broccoli)",
+      "expected": ["cucumber", "tomato", "carrot", "broccoli"]
+    }
+  ]
+}

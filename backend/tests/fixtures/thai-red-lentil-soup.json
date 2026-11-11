@@ -1,0 +1,66 @@
+{
+  "url": "https://www.recipetineats.com/thai-red-lentil-soup/#recipe",
+  "lines": [
+    {
+      "line": "2 tbsp virgin coconut oil (unrefined), or any other coconut or plain oil (Note 1)",
+      "expected": []
+    },
+    {
+      "line": "1/2 cup Thai red curry paste (for medium spiciness, 1 whole can of my favourite Maesri! (Note 2), or 3 - 4 tbsp for mild)",
+      "expected": []
+    },
+    {
+      "line": "1 tbsp finely grated garlic (~3 big cloves)",
+      "expected": ["garlic"]
+    },
+    {
+      "line": "1 tbsp finely grated ginger (~2cm/0.8\" piece)",
+      "expected": ["ginger"]
+    },
+    {
+      "line": "1 1/2 cups dried split red lentils (or whole, green or yellow lentils - whole will take longer to cook, Note 3)",
+      "expected": []
+    },
+    {
+      "line": "600g / 1.2 lb butternut pumpkin (optional)",
+      "expected": ["pumpkin"]
+    },
+    {
+      "line": "400ml/ 14 oz can coconut cream (, full fat (Note 5))",
+      "expected": []
+    },
+    {
+      "line": "2 cups vegetable stock (, low sodium (if using homemade, add 1/2 tsp salt))",
+      "expected": []
+    },
+    { "line": "2 1/2 cups water", "expected": [] },
+    {
+      "line": "2 tsp fish sauce (better) or 3 tsp soy sauce (for vegetarian)",
+      "expected": []
+    },
+    {
+      "line": "1 tightly packed cup baby spinach (- or kale leaves, leafy part of Asian greens, or stir in a bit of frozen spinach)",
+      "expected": ["spinach", "kale"]
+    },
+    {
+      "line": "2 - 3 tbsp milk (, for thinning coconut cream to use for bowl drizzling)",
+      "expected": []
+    },
+    {
+      "line": "Lime wedges ((must!) - if you don't have, stir in 1 tbsp rice vinegar while simmering soup)",
+      "expected": ["lime"]
+    },
+    {
+      "line": "2 tbsp roughly chopped coriander / cilantro leaves (highly recommended)",
+      "expected": ["coriander"]
+    },
+    {
+      "line": "Red cayenne pepper (large red chilli) (, finely sliced (optional))",
+      "expected": ["chilli"]
+    },
+    {
+      "line": "Roti (best!), or naan, flatbread or even crusty bread - (something for dunking! (Note 6))",
+      "expected": []
+    }
+  ]
+}
