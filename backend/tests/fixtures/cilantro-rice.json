@@ -1,0 +1,13 @@
+{
+    "url": "https://cooking.nytimes.com/recipes/1022318-cilantro-rice",
+    "lines": [
+        {"line": "1 tablespoon unsalted butter", "expected": []},
+        {"line": "1 tablespoon vegetable oil", "expected": []},
+        {"line": "1 tablespoon onion powder", "expected": []},
+        {"line": "1 bunch cilantro, stems and leaves separated, both finely chopped", "expected": ["coriander"]},
+        {"line": "1 cup long-grain white rice, such as jasmine or basmati", "expected": []},
+        {"line": "\u00bd teaspoon kosher salt (Diamond Crystal), plus more to taste", "expected": []},
+        {"line": "1 large jalape\u00f1o, thinly sliced", "expected": ["chilli"]},
+        {"line": "Juice of \u00bd lime, plus more to taste", "expected": ["lime"]}
+    ]
+}

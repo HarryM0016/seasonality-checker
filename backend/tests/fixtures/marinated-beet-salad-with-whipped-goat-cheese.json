@@ -1,0 +1,18 @@
+{
+    "url": "https://cooking.nytimes.com/recipes/1018904-marinated-beet-salad-with-whipped-goat-cheese",
+    "lines": [
+        {"line": "8 to 10 medium-large beets (see note)", "expected": ["beetroot"]},
+        {"line": "2 tablespoons minced shallots", "expected": []},
+        {"line": "3 tablespoons olive oil, plus more to taste", "expected": []},
+        {"line": "2 tablespoons rich, sweet vinegar like Barolo, balsamic or sherry", "expected": []},
+        {"line": "Salt and ground black pepper", "expected": []},
+        {"line": "\u00bc cup shelled nuts, like pistachios, walnuts or pecans (optional)", "expected": []},
+        {"line": "1 cup loosely packed whole herb leaves (like parsley, mint or cilantro) or 2 cups small salad greens (like baby spinach, baby arugula or m\u00e2che), or use a mixture or herbs and greens", "expected": ["parsley", "mint", "coriander", "spinach", "rocket"]},
+        {"line": "\u00bc cup fresh goat cheese", "expected": []},
+        {"line": "1 tablespoon olive oil", "expected": []},
+        {"line": "2 tablespoons whole milk or heavy cream", "expected": []},
+        {"line": "\u00bd teaspoon rice or white wine vinegar, plus more to taste", "expected": []},
+        {"line": "\u00bd teaspoon coarsely ground black pepper", "expected": []},
+        {"line": "\u00bc teaspoon salt, more to taste", "expected": []}
+    ]
+}

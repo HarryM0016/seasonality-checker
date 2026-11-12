@@ -1,0 +1,20 @@
+{
+    "url": "https://cooking.nytimes.com/recipes/1018689-roasted-carrot-salad-with-arugula-and-pomegranate",
+    "lines": [
+        {"line": "1 pound carrots, peeled and cut into 2-inch lengths (halve them if carrots are large)", "expected": ["carrot"]},
+        {"line": "\u00bc teaspoon kosher salt, more to taste", "expected": []},
+        {"line": "\u215b teaspoon ground black pepper, more to taste", "expected": []},
+        {"line": "\u00bc cup plus 2 tablespoons extra-virgin olive oil, more as needed", "expected": []},
+        {"line": "\u00bd teaspoon ground cumin", "expected": []},
+        {"line": "1 tablespoon pomegranate molasses", "expected": []},
+        {"line": "\u00bd tablespoon fresh lemon juice, more to taste", "expected": ["lemon"]},
+        {"line": "1 garlic clove, finely grated or minced", "expected": ["garlic"]},
+        {"line": "\u00bd teaspoon Dijon mustard", "expected": []},
+        {"line": "3 ounces baby arugula (about 3 cups)", "expected": ["rocket"]},
+        {"line": "1 fennel bulb, thinly sliced", "expected": ["fennel"]},
+        {"line": "\u00bc cup fresh dill fronds or mint leaves", "expected": ["dill", "mint"]},
+        {"line": "Pomegranate seeds, as needed", "expected": ["pomegrante"]},
+        {"line": "Yogurt, for serving (optional)", "expected": []},
+        {"line": "Toasted walnuts or crumbled pita chips, for serving (optional)", "expected": []}
+    ]
+}
