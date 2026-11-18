@@ -2,7 +2,7 @@
   "url": "https://www.recipetineats.com/quick-chinese-bbq-pork-mince-bowls/",
   "lines": [
     { "line": "1 tbsp oil", "expected": [] },
-    { "line": "1/2 onion (, chopped)", "expected": ["onion"] },
+    { "line": "1/2 onion (, chopped)", "expected": ["brown onion"] },
     { "line": "2 garlic cloves (, finely minced)", "expected": ["garlic"] },
     {
       "line": "500g/ 1 lb pork mince / ground pork (or chicken or turkey)",

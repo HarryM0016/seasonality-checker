@@ -22,3 +22,11 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not llm'"
+markers = ["llm: calls the Claude API (costs tokens); run with `pytest -m llm`"]

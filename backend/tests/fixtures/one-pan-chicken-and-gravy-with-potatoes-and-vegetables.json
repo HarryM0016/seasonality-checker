@@ -28,7 +28,7 @@
     },
     {
       "line": "1 large red onion (, cut into 1cm / 0.4\" thick wedges)",
-      "expected": ["onion"]
+      "expected": ["red onion"]
     },
     {
       "line": "2 garlic cloves (, crushed with garlic crusher or finely minced with a knife)",
