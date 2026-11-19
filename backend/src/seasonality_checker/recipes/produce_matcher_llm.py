@@ -3,22 +3,18 @@ import os
 from functools import lru_cache
 from typing import Any
 
-import psycopg2
 from anthropic import Anthropic
 from dotenv import load_dotenv
+
+from seasonality_checker.db import get_connection
 
 
 @lru_cache(maxsize=1)
 def get_produce_names() -> list[str]:
     """Canonical produce names from the database, sorted so the prompt is identical every call."""
-    load_dotenv()
-    connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT name FROM produce ORDER BY name")
-            return [name for (name,) in cursor.fetchall()]
-    finally:
-        connection.close()
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute("SELECT name FROM produce ORDER BY name")
+        return [name for (name,) in cursor.fetchall()]
 
 
 TOOL_NAME = "return_line_matches"
