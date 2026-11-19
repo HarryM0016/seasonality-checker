@@ -69,6 +69,8 @@ EXCLUDE_AFTER = {
     "salt",
     "seasoning",
     "hoisin",
+    "coulis",
+    "curd",
 }
 
 
@@ -181,11 +183,7 @@ def default_matcher() -> ProduceMatcher:
     return ProduceMatcher(aliases)
 
 
-def match_produce(lines: list[str]) -> list[str]:
-    """Canonical names of the fresh produce in a recipe's ingredient lines, using the alias table."""
+def match_lines(lines: list[str]) -> list[list[str]]:
+    """One list of canonical produce names per input line, in the same order, using the alias table."""
     matcher = default_matcher()
-    found = {}  # dict keeps first-seen order and drops duplicates
-    for line in lines:
-        for produce in sorted(matcher.produce_in_line(line)):
-            found[produce] = None
-    return list(found)
+    return [sorted(matcher.produce_in_line(line)) for line in lines]

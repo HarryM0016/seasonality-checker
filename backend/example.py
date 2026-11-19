@@ -3,7 +3,7 @@ import argparse
 from seasonality_checker.recipes.ingredient_extractor import (
     extract_ingredients_from_recipe,
 )
-from seasonality_checker.recipes.produce_matcher_llm import match_produce
+from seasonality_checker.recipes import produce_matcher_llm, produce_matcher_lookup
 from seasonality_checker.seasonality_getter import get_seasonality
 from seasonality_checker.recipe_scorer import score_recipe
 
@@ -14,14 +14,23 @@ if __name__ == "__main__":
         nargs="?",
         default="https://cooking.nytimes.com/recipes/1008-guacamole",
     )
+    parser.add_argument(
+        "--llm", action="store_true", help="match with Claude instead of the alias table (costs tokens)"
+    )
     args = parser.parse_args()
 
-    url = args.url
-    ingredients = extract_ingredients_from_recipe(url)
-    print(f"{ingredients}\n")
+    matcher = produce_matcher_llm if args.llm else produce_matcher_lookup
 
-    normalised_ingredients = match_produce(ingredients)
-    print(f"{normalised_ingredients}\n")
+    lines = extract_ingredients_from_recipe(args.url)
+    matches = matcher.match_lines(lines)
 
-    updated_ingredients = get_seasonality(normalised_ingredients, 6)
+    for index, (line, produce) in enumerate(zip(lines, matches)):
+        label = ", ".join(produce) if produce else "-"
+        print(f"{index:>3}  {label:<25}  {line}")
+
+    # Unique produce across the recipe, in first-seen order
+    produce_names = list(dict.fromkeys(name for line_matches in matches for name in line_matches))
+    print(f"\n{produce_names}\n")
+
+    updated_ingredients = get_seasonality(produce_names, 6)
     print(f"{score_recipe(updated_ingredients)}")

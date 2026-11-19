@@ -16,18 +16,29 @@ import pytest
 
 from seasonality_checker.recipes.produce_matcher_lookup import (
     ProduceMatcher,
-    default_matcher,
+    match_lines,
 )
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
-def load_lines() -> list[dict]:
+def load_lines() -> list:
+    """One pytest case per fixture line.
+
+    A line with "skip": ["lookup"] in its fixture is reported as skipped, not run - use it for
+    lines only the LLM fallback is expected to handle, such as misspellings.
+    """
     cases = []
     for path in sorted(FIXTURES_DIR.glob("*.json")):
         recipe = json.loads(path.read_text())
         for index, line in enumerate(recipe["lines"]):
-            cases.append({"recipe": path.stem, "index": index, **line})
+            case = {"recipe": path.stem, "index": index, **line}
+            marks = (
+                [pytest.mark.skip(reason="fixture marks this line as LLM-only")]
+                if "lookup" in line.get("skip", [])
+                else []
+            )
+            cases.append(pytest.param(case, marks=marks))
     return cases
 
 
@@ -38,7 +49,8 @@ def load_lines() -> list[dict]:
     "case", load_lines(), ids=lambda c: f"{c['recipe']}[{c['index']}] {c['line'][:40]}"
 )
 def test_fixture_line(case):
-    actual = default_matcher().produce_in_line(case["line"])
+    [matches] = match_lines([case["line"]])
+    actual = set(matches)
     expected = set(case["expected"])
 
     missed, false_positives = expected - actual, actual - expected
