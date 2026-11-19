@@ -11,14 +11,11 @@ How a line is processed:
        - an "after" word between this match and the next one: "onion powder", "coconut or plain oil"
 """
 
-import psycopg2
-import os
-from dotenv import load_dotenv
-
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import Iterable
 
+from seasonality_checker.db import get_connection
 from seasonality_checker.recipes.text_normaliser import normalise_text, tokenise
 
 MAX_PHRASE_WORDS = 3
@@ -167,18 +164,13 @@ def first_in(tokens: list[str], words: set[str]) -> str | None:
 @lru_cache(maxsize=1)
 def default_matcher() -> ProduceMatcher:
     """Matcher built from the produce_alias table. Built once per process (see lru_cache)."""
-    load_dotenv()
-    connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT a.alias, p.name
-                FROM produce_alias a
-                JOIN produce p ON p.id = a.produce_id
-            """)
-            aliases = cursor.fetchall()
-    finally:
-        connection.close()
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT a.alias, p.name
+            FROM produce_alias a
+            JOIN produce p ON p.id = a.produce_id
+        """)
+        aliases = cursor.fetchall()
 
     return ProduceMatcher(aliases)
 
