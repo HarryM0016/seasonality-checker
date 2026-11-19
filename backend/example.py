@@ -1,36 +1,36 @@
+"""Run the recipe checker from the command line, the same way the API will.
+
+    python example.py URL --postcode 3000
+    python example.py URL --postcode 3000 --recheck 4 6     # send lines 4 and 6 to Claude (costs tokens)
+"""
+
 import argparse
 
-from seasonality_checker.recipes.ingredient_extractor import (
-    extract_ingredients_from_recipe,
-)
-from seasonality_checker.recipes import produce_matcher_llm, produce_matcher_lookup
-from seasonality_checker.seasonality_getter import get_seasonality
-from seasonality_checker.recipe_scorer import score_recipe
+from seasonality_checker.recipes.recipe_checker import check_recipe, recheck_lines
+
+MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "url",
-        nargs="?",
-        default="https://cooking.nytimes.com/recipes/1008-guacamole",
-    )
-    parser.add_argument(
-        "--llm", action="store_true", help="match with Claude instead of the alias table (costs tokens)"
-    )
+    parser.add_argument("url", nargs="?", default="https://www.recipetineats.com/pavlova-bombs/")
+    parser.add_argument("--postcode", default="3000")
+    parser.add_argument("--month", type=int, help="1-12 (default: this month)")
+    parser.add_argument("--recheck", type=int, nargs="+", metavar="LINE", help="line numbers to send to Claude")
     args = parser.parse_args()
 
-    matcher = produce_matcher_llm if args.llm else produce_matcher_lookup
+    result = check_recipe(args.url, args.postcode, args.month)
+    if args.recheck:
+        result = recheck_lines(result.recipe_id, args.recheck, args.postcode, args.month)
 
-    lines = extract_ingredients_from_recipe(args.url)
-    matches = matcher.match_lines(lines)
+    print(f"Recipe {result.recipe_id}: {result.url}\n")
+    for line in result.lines:
+        produce = ", ".join(line.produce) or "-"
+        print(f"{line.index:>3}  {line.method:<6}  {produce:<25}  {line.text}")
 
-    for index, (line, produce) in enumerate(zip(lines, matches)):
-        label = ", ".join(produce) if produce else "-"
-        print(f"{index:>3}  {label:<25}  {line}")
+    print(f"\nIn {MONTHS[result.month - 1]}:")
+    for item in result.produce:
+        status = {True: "in season", False: "out of season", None: "no data"}[item.in_season]
+        print(f"  {item.name:<20} {status}")
 
-    # Unique produce across the recipe, in first-seen order
-    produce_names = list(dict.fromkeys(name for line_matches in matches for name in line_matches))
-    print(f"\n{produce_names}\n")
-
-    updated_ingredients = get_seasonality(produce_names, 6)
-    print(f"{score_recipe(updated_ingredients)}")
+    print("\nScore by month:")
+    print("  " + "  ".join(f"{m} {s}" for m, s in zip(MONTHS, result.monthly_scores)))
