@@ -2,7 +2,8 @@ import recipe_scrapers
 import requests
 
 
-def extract_ingredients_from_recipe(url: str) -> list[str]:
+def scrape_ingredients(url: str) -> list[str]:
+    """The raw ingredient lines from a recipe page, or [] if the site isn't supported."""
     response = requests.get(url)
     response.raise_for_status()
     html = response.text

@@ -17,8 +17,8 @@ from pathlib import Path
 
 import pytest
 
-from seasonality_checker.recipes import produce_matcher_lookup
-from seasonality_checker.recipes.produce_matcher_llm import (
+from seasonality_checker.matching import lookup
+from seasonality_checker.matching.llm import (
     LlmMatch,
     get_produce_names,
     match_lines,
@@ -108,7 +108,7 @@ def fallback_lines(recipe: dict) -> list[dict]:
     - lines where it found some produce but missed some ("mango" found, "passsionfruit" missed).
     """
     raw_lines = [line["line"] for line in recipe["lines"]]
-    lookup_results = produce_matcher_lookup.match_lines(raw_lines)
+    lookup_results = lookup.match_lines(raw_lines)
     return [
         line
         for line, found in zip(recipe["lines"], lookup_results)

@@ -8,16 +8,11 @@ version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
     "anthropic>=2.8,<3",
+    "inflect",
     "python-dotenv",
     "psycopg2-binary",
     "recipe-scrapers",
     "requests",
-    "numpy",
-    "pandas",
-    "geopandas",
-    "rasterio",
-    "xarray",
-    "netCDF4",
 ]
 
 [tool.setuptools.packages.find]
@@ -25,6 +20,9 @@ where = ["src"]
 
 [dependency-groups]
 dev = ["pytest"]
+# Only for the one-off scripts that build and load the postcode -> climate data:
+#   pip install --group data
+data = ["numpy", "pandas", "geopandas", "rasterio", "xarray", "netCDF4"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

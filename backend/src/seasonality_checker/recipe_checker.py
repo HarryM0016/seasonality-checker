@@ -13,14 +13,8 @@ from datetime import date
 from typing import Literal
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-from seasonality_checker import recipe_scorer, seasonality_getter
-from seasonality_checker.recipes import (
-    alias_store,
-    ingredient_extractor,
-    produce_matcher_llm,
-    produce_matcher_lookup,
-    recipe_store,
-)
+from seasonality_checker import recipe_store, scraper, seasonality
+from seasonality_checker.matching import alias_suggestions, llm, lookup
 
 MAX_RECHECK_LINES = 10
 
@@ -89,7 +83,7 @@ def check_recipe(url: str, postcode: str, month: int | None = None) -> RecipeRes
 
     stored = recipe_store.get_by_url(url)
     if stored is None:
-        texts = ingredient_extractor.extract_ingredients_from_recipe(url)
+        texts = scraper.scrape_ingredients(url)
         if not texts:
             raise UnsupportedRecipe(f"No ingredients found at {url}")
         stored = recipe_store.insert(url, texts)
@@ -116,7 +110,7 @@ def recheck_lines(
         raise InvalidRecheck("Line index out of range")
 
     texts = [stored.lines[i].text for i in indices]
-    matches = produce_matcher_llm.match_lines(texts)
+    matches = llm.match_lines(texts)
     stored = recipe_store.save_llm_results(
         recipe_id,
         {
@@ -125,7 +119,7 @@ def recheck_lines(
         },
     )
 
-    alias_store.save_suggestions(texts, matches)
+    alias_suggestions.save_suggestions(texts, matches)
 
     return _build_result(stored, climate_id, month)
 
@@ -156,7 +150,7 @@ def normalise_url(url: str) -> str:
 
 
 def _climate_for(postcode: str) -> int:
-    climate_id = seasonality_getter.get_climate_id(postcode)
+    climate_id = seasonality.get_climate_id(postcode)
     if climate_id is None:
         raise UnknownPostcode(f"Unknown postcode: {postcode!r}")
     return climate_id
@@ -173,7 +167,7 @@ def _validate_month(month: int | None) -> int:
 def _build_result(
     stored: recipe_store.StoredRecipe, climate_id: int, month: int
 ) -> RecipeResult:
-    lookup_matches = produce_matcher_lookup.match_lines(
+    lookup_matches = lookup.match_lines(
         [line.text for line in stored.lines]
     )
 
@@ -191,8 +185,8 @@ def _build_result(
     # Unique produce across the recipe, in the order it first appears
     produce_names = list(dict.fromkeys(name for line in lines for name in line.produce))
 
-    ingredients = seasonality_getter.get_seasonality(produce_names, climate_id)
-    by_name = {ingredient.name: ingredient for ingredient in ingredients}
+    seasons = seasonality.get_seasonality(produce_names, climate_id)
+    by_name = {season.name: season for season in seasons}
     produce = [
         ProduceResult(
             name, by_name[name].is_in_season(month) if name in by_name else None
@@ -206,5 +200,5 @@ def _build_result(
         month=month,
         lines=lines,
         produce=produce,
-        monthly_scores=recipe_scorer.score_recipe(ingredients),
+        monthly_scores=seasonality.score_recipe(seasons),
     )

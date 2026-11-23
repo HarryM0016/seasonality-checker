@@ -10,3 +10,7 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 toDo.md
+*.egg-info/
+
+# Raw postcode boundaries (~77 MB); see README.md for where to download them
+data/POA/

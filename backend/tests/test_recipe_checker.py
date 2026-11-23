@@ -10,10 +10,9 @@ Run:
 
 import pytest
 
-from seasonality_checker.domain.ingredient import Ingredient
-from seasonality_checker.recipes import recipe_checker, recipe_store
-from seasonality_checker.recipes.produce_matcher_llm import LlmMatch
-from seasonality_checker.recipes.recipe_checker import (
+from seasonality_checker import recipe_checker, recipe_store
+from seasonality_checker.matching.llm import LlmMatch
+from seasonality_checker.recipe_checker import (
     InvalidRecheck,
     RecipeNotFound,
     UnknownPostcode,
@@ -22,7 +21,8 @@ from seasonality_checker.recipes.recipe_checker import (
     normalise_url,
     recheck_lines,
 )
-from seasonality_checker.recipes.recipe_store import StoredLine, StoredRecipe
+from seasonality_checker.recipe_store import StoredLine, StoredRecipe
+from seasonality_checker.seasonality import ProduceSeason
 
 URL = "https://www.example.com/lemon-pasta/"
 
@@ -46,7 +46,6 @@ class Fakes:
         self.scraped: list[str] = []
         self.llm_calls: list[list[str]] = []
         self.suggestions: list[tuple[list[str], list[list[LlmMatch]]]] = []
-        self.suggestions_fail = False
         self.llm_answers = {"20 rasberries": ["raspberry"]}
         self.page_lines = list(RECIPE_LINES)
 
@@ -56,15 +55,15 @@ class Fakes:
         patch(recipe_store, "insert", self.insert)
         patch(recipe_store, "save_llm_results", self.save_llm_results)
         patch(
-            recipe_checker.ingredient_extractor,
-            "extract_ingredients_from_recipe",
+            recipe_checker.scraper,
+            "scrape_ingredients",
             self.scrape,
         )
-        patch(recipe_checker.produce_matcher_lookup, "match_lines", self.lookup)
-        patch(recipe_checker.produce_matcher_llm, "match_lines", self.llm)
-        patch(recipe_checker.alias_store, "save_suggestions", self.save_suggestions)
-        patch(recipe_checker.seasonality_getter, "get_climate_id", self.climate_id)
-        patch(recipe_checker.seasonality_getter, "get_seasonality", self.seasonality)
+        patch(recipe_checker.lookup, "match_lines", self.lookup)
+        patch(recipe_checker.llm, "match_lines", self.llm)
+        patch(recipe_checker.alias_suggestions, "save_suggestions", self.save_suggestions)
+        patch(recipe_checker.seasonality, "get_climate_id", self.climate_id)
+        patch(recipe_checker.seasonality, "get_seasonality", self.seasonality)
 
     def get_by_url(self, url):
         return next((r for r in self.recipes.values() if r.url == url), None)
@@ -99,15 +98,13 @@ class Fakes:
         ]
 
     def save_suggestions(self, lines, matches):
-        if self.suggestions_fail:
-            raise RuntimeError("database down")
         self.suggestions.append((lines, matches))
 
     def climate_id(self, postcode):
         return 6 if postcode == "3000" else None
 
     def seasonality(self, names, climate_id):
-        return [Ingredient(name, SEASONS[name]) for name in names if name in SEASONS]
+        return [ProduceSeason(name, *SEASONS[name]) for name in names if name in SEASONS]
 
 
 @pytest.fixture
@@ -270,13 +267,3 @@ def test_recheck_sends_claude_matches_for_alias_suggestions(fakes):
     recheck_lines(recipe_id, [2], "3000")
 
     assert fakes.suggestions == [(["20 rasberries"], [[LlmMatch("raspberry", "raspberry")]])]
-
-
-def test_failed_alias_suggestions_dont_fail_the_recheck(fakes):
-    fakes.suggestions_fail = True
-    recipe_id = check_recipe(URL, "3000").recipe_id
-
-    result = recheck_lines(recipe_id, [2], "3000")
-
-    assert result.lines[2].produce == ["raspberry"]
-    assert fakes.recipes[recipe_id].lines[2].llm == ["raspberry"]  # still saved

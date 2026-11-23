@@ -1,27 +1,36 @@
-import psycopg2
+"""Load data/postcode_climate_mapping.csv (from build_postcode_climates.py) into the postcodes table.
+
+Postcodes are read as text so leading zeros are kept ("0812", not 812).
+
+Run:
+    python scripts/load_postcodes.py
+"""
+
+from pathlib import Path
+
 import pandas
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-connection_string = os.getenv('DATABASE_URL')
+from seasonality_checker.db import get_connection
 
-connection = psycopg2.connect(connection_string)
-cursor = connection.cursor()
+CSV_PATH = Path(__file__).resolve().parents[1] / "data" / "postcode_climate_mapping.csv"
 
-dataframe = pandas.read_csv('postcode_climate_mapping.csv')
 
-for _, row in dataframe.iterrows():
-    try:
-        cursor.execute(
+def main() -> None:
+    dataframe = pandas.read_csv(CSV_PATH, dtype={"postcode": str})
+    rows = [(row.postcode.zfill(4), row.climate) for row in dataframe.itertuples()]
+
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.executemany(
             """
             INSERT INTO postcodes (postcode, climate_id)
             SELECT %s, id FROM climates WHERE name = %s
             ON CONFLICT DO NOTHING
-        """, (row['postcode'], row['climate']))
-    except Exception as e:
-        print(f"Error inserting {row['postcode']}: {e}")
+            """,
+            rows,
+        )
 
-connection.commit()
-cursor.close()
-connection.close()
+    print(f"Loaded {len(rows)} postcodes from {CSV_PATH}")
+
+
+if __name__ == "__main__":
+    main()
