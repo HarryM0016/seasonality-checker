@@ -15,9 +15,13 @@ def normalise_text(text: str) -> str:
 
 
 def tokenise(text: str) -> list[str]:
-    """Lowercase, strip accents, split on anything that isn't a letter/digit, singularise each word."""
-    words = _WORD_PATTERN.findall(remove_accents(text.lower()))
-    return [singularise(word) for word in words]
+    """split_words, then singularise each word."""
+    return [singularise(word) for word in split_words(text)]
+
+
+def split_words(text: str) -> list[str]:
+    """Lowercase, strip accents, split on anything that isn't a letter/digit."""
+    return _WORD_PATTERN.findall(remove_accents(text.lower()))
 
 
 def remove_accents(text: str) -> str:

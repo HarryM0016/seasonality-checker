@@ -96,6 +96,10 @@ class ProduceMatcher:
             matches.extend(self._match_chunk(tokenise(chunk)))
         return matches
 
+    def canonical_for(self, phrase: str) -> str | None:
+        """The produce this phrase maps to if it is exactly an alias, e.g. "cilantro" -> "coriander"."""
+        return self._lookup.get(normalise_text(phrase))
+
     def produce_in_line(self, line: str) -> set[str]:
         """Canonical names of the fresh produce in the line."""
         return {match.produce for match in self.match_line(line) if match.is_fresh}
@@ -163,12 +167,17 @@ def first_in(tokens: list[str], words: set[str]) -> str | None:
 
 @lru_cache(maxsize=1)
 def default_matcher() -> ProduceMatcher:
-    """Matcher built from the produce_alias table. Built once per process (see lru_cache)."""
+    """Matcher built from the reviewed aliases in produce_alias. Built once per process (see
+    lru_cache), so newly approved aliases are used after a restart.
+
+    Unreviewed aliases (suggestions from Claude, see alias_store) are left out until approved.
+    """
     with get_connection() as connection, connection.cursor() as cursor:
         cursor.execute("""
             SELECT a.alias, p.name
             FROM produce_alias a
             JOIN produce p ON p.id = a.produce_id
+            WHERE a.reviewed
         """)
         aliases = cursor.fetchall()
 
