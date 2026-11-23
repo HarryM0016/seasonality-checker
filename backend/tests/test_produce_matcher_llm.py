@@ -19,6 +19,7 @@ import pytest
 
 from seasonality_checker.recipes import produce_matcher_lookup
 from seasonality_checker.recipes.produce_matcher_llm import (
+    LlmMatch,
     get_produce_names,
     match_lines,
     parse_results,
@@ -62,23 +63,39 @@ def test_fixture_labels_are_known_produce(recipe):
 # --- Offline: parsing Claude's tool input ------------------------------------
 
 
+def item(name: str, phrase: str | None = None) -> dict:
+    """One produce entry as Claude sends it."""
+    return {"name": name, "phrase": phrase or name}
+
+
 def test_parse_results_fills_missing_lines():
-    assert parse_results({"results": [{"index": 1, "produce": ["lime"]}]}, 3) == [[], ["lime"], []]
+    assert parse_results({"results": [{"index": 1, "produce": [item("lime")]}]}, 3) == [
+        [],
+        [LlmMatch("lime", "lime")],
+        [],
+    ]
 
 
 def test_parse_results_ignores_out_of_range_indices():
-    tool_input = {"results": [{"index": 5, "produce": ["lime"]}, {"index": -1, "produce": ["lemon"]}]}
+    tool_input = {
+        "results": [
+            {"index": 5, "produce": [item("lime")]},
+            {"index": -1, "produce": [item("lemon")]},
+        ]
+    }
     assert parse_results(tool_input, 2) == [[], []]
 
 
 def test_parse_results_merges_repeated_indices():
     tool_input = {
         "results": [
-            {"index": 0, "produce": ["lime", "lemon"]},
-            {"index": 0, "produce": ["lemon", "mint"]},
+            {"index": 0, "produce": [item("lime"), item("lemon", "lemons")]},
+            {"index": 0, "produce": [item("lemon", "lemon zest"), item("mint")]},
         ]
     }
-    assert parse_results(tool_input, 1) == [["lime", "lemon", "mint"]]
+    assert parse_results(tool_input, 1) == [
+        [LlmMatch("lime", "lime"), LlmMatch("lemon", "lemons"), LlmMatch("mint", "mint")]
+    ]
 
 
 # --- Live: run the Claude matcher (costs tokens) ------------------------------
@@ -107,7 +124,10 @@ def test_llm_fallback(recipe):
     if not lines:
         pytest.skip("the lookup fully matched every line")
 
-    actual = match_lines([line["line"] for line in lines])
+    actual = [
+        [match.produce for match in found]
+        for found in match_lines([line["line"] for line in lines])
+    ]
     assert len(actual) == len(lines)
 
     failures = []

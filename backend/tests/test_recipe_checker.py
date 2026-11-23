@@ -12,6 +12,7 @@ import pytest
 
 from seasonality_checker.domain.ingredient import Ingredient
 from seasonality_checker.recipes import recipe_checker, recipe_store
+from seasonality_checker.recipes.produce_matcher_llm import LlmMatch
 from seasonality_checker.recipes.recipe_checker import (
     InvalidRecheck,
     RecipeNotFound,
@@ -44,6 +45,8 @@ class Fakes:
         self.recipes: dict[int, StoredRecipe] = {}
         self.scraped: list[str] = []
         self.llm_calls: list[list[str]] = []
+        self.suggestions: list[tuple[list[str], list[list[LlmMatch]]]] = []
+        self.suggestions_fail = False
         self.llm_answers = {"20 rasberries": ["raspberry"]}
         self.page_lines = list(RECIPE_LINES)
 
@@ -59,6 +62,7 @@ class Fakes:
         )
         patch(recipe_checker.produce_matcher_lookup, "match_lines", self.lookup)
         patch(recipe_checker.produce_matcher_llm, "match_lines", self.llm)
+        patch(recipe_checker.alias_store, "save_suggestions", self.save_suggestions)
         patch(recipe_checker.seasonality_getter, "get_climate_id", self.climate_id)
         patch(recipe_checker.seasonality_getter, "get_seasonality", self.seasonality)
 
@@ -89,7 +93,15 @@ class Fakes:
 
     def llm(self, lines):
         self.llm_calls.append(lines)
-        return [self.llm_answers.get(line, []) for line in lines]
+        return [
+            [LlmMatch(name, name) for name in self.llm_answers.get(line, [])]
+            for line in lines
+        ]
+
+    def save_suggestions(self, lines, matches):
+        if self.suggestions_fail:
+            raise RuntimeError("database down")
+        self.suggestions.append((lines, matches))
 
     def climate_id(self, postcode):
         return 6 if postcode == "3000" else None
@@ -251,3 +263,20 @@ def test_duplicate_indices_are_sent_once(fakes):
     recipe_id = check_recipe(URL, "3000").recipe_id
     recheck_lines(recipe_id, [2, 2, 2], "3000")
     assert fakes.llm_calls == [["20 rasberries"]]
+
+
+def test_recheck_sends_claude_matches_for_alias_suggestions(fakes):
+    recipe_id = check_recipe(URL, "3000").recipe_id
+    recheck_lines(recipe_id, [2], "3000")
+
+    assert fakes.suggestions == [(["20 rasberries"], [[LlmMatch("raspberry", "raspberry")]])]
+
+
+def test_failed_alias_suggestions_dont_fail_the_recheck(fakes):
+    fakes.suggestions_fail = True
+    recipe_id = check_recipe(URL, "3000").recipe_id
+
+    result = recheck_lines(recipe_id, [2], "3000")
+
+    assert result.lines[2].produce == ["raspberry"]
+    assert fakes.recipes[recipe_id].lines[2].llm == ["raspberry"]  # still saved

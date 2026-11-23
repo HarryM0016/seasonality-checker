@@ -15,6 +15,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from seasonality_checker import recipe_scorer, seasonality_getter
 from seasonality_checker.recipes import (
+    alias_store,
     ingredient_extractor,
     produce_matcher_llm,
     produce_matcher_lookup,
@@ -57,7 +58,9 @@ class LineResult:
     index: int
     text: str
     produce: list[str]
-    method: Literal["lookup", "llm", "none"]  # "llm": Claude checked it (produce may be [])
+    method: Literal[
+        "lookup", "llm", "none"
+    ]  # "llm": Claude checked it (produce may be [])
 
 
 @dataclass(frozen=True)
@@ -112,8 +115,17 @@ def recheck_lines(
     if indices[0] < 0 or indices[-1] >= len(stored.lines):
         raise InvalidRecheck("Line index out of range")
 
-    matches = produce_matcher_llm.match_lines([stored.lines[i].text for i in indices])
-    stored = recipe_store.save_llm_results(recipe_id, dict(zip(indices, matches)))
+    texts = [stored.lines[i].text for i in indices]
+    matches = produce_matcher_llm.match_lines(texts)
+    stored = recipe_store.save_llm_results(
+        recipe_id,
+        {
+            index: [match.produce for match in found]
+            for index, found in zip(indices, matches)
+        },
+    )
+
+    alias_store.save_suggestions(texts, matches)
 
     return _build_result(stored, climate_id, month)
 
@@ -133,7 +145,13 @@ def normalise_url(url: str) -> str:
         if not key.lower().startswith("utm_") and key.lower() not in TRACKING_PARAMS
     ]
     return urlunsplit(
-        (parts.scheme.lower(), parts.netloc.lower(), parts.path or "/", urlencode(query), "")
+        (
+            parts.scheme.lower(),
+            parts.netloc.lower(),
+            parts.path or "/",
+            urlencode(query),
+            "",
+        )
     )
 
 
@@ -152,12 +170,18 @@ def _validate_month(month: int | None) -> int:
     return month
 
 
-def _build_result(stored: recipe_store.StoredRecipe, climate_id: int, month: int) -> RecipeResult:
-    lookup_matches = produce_matcher_lookup.match_lines([line.text for line in stored.lines])
+def _build_result(
+    stored: recipe_store.StoredRecipe, climate_id: int, month: int
+) -> RecipeResult:
+    lookup_matches = produce_matcher_lookup.match_lines(
+        [line.text for line in stored.lines]
+    )
 
     lines = []
     for index, (line, found) in enumerate(zip(stored.lines, lookup_matches)):
-        if line.llm is not None:  # the user asked Claude to check this line; its answer wins
+        if (
+            line.llm is not None
+        ):  # the user asked Claude to check this line; its answer wins
             lines.append(LineResult(index, line.text, line.llm, "llm"))
         elif found:
             lines.append(LineResult(index, line.text, found, "lookup"))
@@ -170,7 +194,9 @@ def _build_result(stored: recipe_store.StoredRecipe, climate_id: int, month: int
     ingredients = seasonality_getter.get_seasonality(produce_names, climate_id)
     by_name = {ingredient.name: ingredient for ingredient in ingredients}
     produce = [
-        ProduceResult(name, by_name[name].is_in_season(month) if name in by_name else None)
+        ProduceResult(
+            name, by_name[name].is_in_season(month) if name in by_name else None
+        )
         for name in produce_names
     ]
 
