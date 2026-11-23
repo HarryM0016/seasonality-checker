@@ -13,15 +13,15 @@ The lookup is built once per process, so approved aliases are used after a resta
 """
 
 from seasonality_checker.db import get_connection
-from seasonality_checker.recipes.produce_matcher_llm import LlmMatch
-from seasonality_checker.recipes.produce_matcher_lookup import (
+from seasonality_checker.matching.llm import LlmMatch
+from seasonality_checker.matching.lookup import (
     EXCLUDE_AFTER,
     EXCLUDE_BEFORE,
     MAX_PHRASE_WORDS,
     ProduceMatcher,
     split_chunks,
 )
-from seasonality_checker.recipes.text_normaliser import normalise_text, split_words, tokenise
+from seasonality_checker.matching.text_normaliser import normalise_text, split_words, tokenise
 
 _EXCLUDED_WORDS = {normalise_text(word) for word in EXCLUDE_BEFORE | EXCLUDE_AFTER}
 

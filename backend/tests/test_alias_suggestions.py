@@ -3,14 +3,14 @@
 Offline: uses a small in-memory alias list, no database or API key.
 
 Run:
-    pytest tests/test_alias_store.py
+    pytest tests/test_alias_suggestions.py
 """
 
 import pytest
 
-from seasonality_checker.recipes.alias_store import find_suggestions, is_new_alias
-from seasonality_checker.recipes.produce_matcher_llm import LlmMatch
-from seasonality_checker.recipes.produce_matcher_lookup import ProduceMatcher
+from seasonality_checker.matching.alias_suggestions import find_suggestions, is_new_alias
+from seasonality_checker.matching.llm import LlmMatch
+from seasonality_checker.matching.lookup import ProduceMatcher
 
 KNOWN = ProduceMatcher(
     [

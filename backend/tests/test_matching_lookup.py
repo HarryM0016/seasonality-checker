@@ -5,8 +5,8 @@ Fixture tests check every line in tests/fixtures/*.json:
 Unit tests check individual matching rules against a small in-memory alias list.
 
 Run:
-    pytest tests/test_produce_matcher_lookup.py        # needs DATABASE_URL (reads produce_alias)
-    pytest tests/test_produce_matcher_lookup.py -k "not fixture_line"   # unit tests only, no database needed
+    pytest tests/test_matching_lookup.py        # needs DATABASE_URL (reads produce_alias)
+    pytest tests/test_matching_lookup.py -k "not fixture_line"   # unit tests only, no database needed
 """
 
 import json
@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from seasonality_checker.recipes.produce_matcher_lookup import (
+from seasonality_checker.matching.lookup import (
     ProduceMatcher,
     match_lines,
 )

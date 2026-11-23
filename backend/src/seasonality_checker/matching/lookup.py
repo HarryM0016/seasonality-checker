@@ -16,7 +16,7 @@ from functools import lru_cache
 from typing import Iterable
 
 from seasonality_checker.db import get_connection
-from seasonality_checker.recipes.text_normaliser import normalise_text, tokenise
+from seasonality_checker.matching.text_normaliser import normalise_text, tokenise
 
 MAX_PHRASE_WORDS = 3
 
@@ -170,7 +170,7 @@ def default_matcher() -> ProduceMatcher:
     """Matcher built from the reviewed aliases in produce_alias. Built once per process (see
     lru_cache), so newly approved aliases are used after a restart.
 
-    Unreviewed aliases (suggestions from Claude, see alias_store) are left out until approved.
+    Unreviewed aliases (suggestions from Claude, see alias_suggestions) are left out until approved.
     """
     with get_connection() as connection, connection.cursor() as cursor:
         cursor.execute("""

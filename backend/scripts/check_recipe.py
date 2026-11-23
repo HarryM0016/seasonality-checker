@@ -1,12 +1,12 @@
 """Run the recipe checker from the command line, the same way the API will.
 
-    python example.py URL --postcode 3000
-    python example.py URL --postcode 3000 --recheck 4 6     # send lines 4 and 6 to Claude (costs tokens)
+    python scripts/check_recipe.py URL --postcode 3000
+    python scripts/check_recipe.py URL --postcode 3000 --recheck 4 6     # send lines 4 and 6 to Claude (costs tokens)
 """
 
 import argparse
 
-from seasonality_checker.recipes.recipe_checker import check_recipe, recheck_lines
+from seasonality_checker.recipe_checker import check_recipe, recheck_lines
 
 MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 
